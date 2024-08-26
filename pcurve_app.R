@@ -1,7 +1,6 @@
 
 ###################################################################################################################
-#This is the R Code behind the p-curve app 4.06
-#Last updated: 2017 11 30
+#This is the R Code behind the p-curve app 4.1
 #Written by Uri Simonsohn (urisohn@gmail.com)
 # 
 ###################################################################################################################
@@ -17,15 +16,35 @@
 #below.
 
 ###################################################################################################################
+  library('groundhog')
+  pkgs=c('stringr','poibin')
+  #groundhog.library(pkgs, '2024-07-01')
+   groundhog.library(pkgs, '2017-11-30') #On the server
+    
+     #GROUNDHOG NOTE:
+        # Groundhog loads the version of each package as current on the specified date.
+        # When re-running this code, you can change the date to a more recent one.
+        # Most likely the script will run fine with the new date, and it will load 
+        # pkgs much faster if the date is recent. But, if the code does not run with 
+        # a recent date, it means a pkg update broke this code. You can 
+        # switch the date back to the one above. The older pkg versions will install
+        # faster if you run this code on the version of *R* available on that day.
+        # See details and instructions: https://groundhogr.com/many
 
-  library(stringr)  #Library to process string variables (text of the entered tests)
-  library(poibin)   #This library has the poisson binomial, the distribution of the sum of binomial with different underlying probabilities
-
+    #The script was written in R-3.4.x but upon verifying it runs with R-4.4, 
+    #I kept that date in groundhog making it more efficient to run,
+    #in other words, as of 2024/08, neither of the pkgs used has changed in a way that breaks the code
+  
+  
+#Function that runs the app  
  pcurve_app=function(file1,dir1)
  {
   #0.1 Set up parameters
-  #used to compute the binomial test given that each test has a (slightly) different probability of p<.025 depending on its own noncentral parameter
-  #See Hong (2013) - "On computing the distribution function for the Poisson binomial distribution" Computational Statistics and Data Analysis, V59, p.41-51 - http://dx.doi.org/10.1016/j.csda.2012.10.006 
+  #used to compute the binomial test given that each test has a (slightly) different
+  #probability of p<.025 depending on its own noncentral parameter
+  
+  #See Hong (2013) - "On computing the distribution function for the Poisson 
+  #  binomial distribution" Computational Statistics and Data Analysis, V59, p.41-51 - http://dx.doi.org/10.1016/j.csda.2012.10.006 
   
   setwd(dir1)                               #Set as Working Directory the folder on server where temporary files are saved
   filek=substr(file1,1,nchar(file1)-4)      #filek is the name of the file entered by the user/server, dropping the extension
@@ -599,7 +618,7 @@ prop33=function(pc)
   droplow.r=droplow.33=drophigh.r=drophigh.33=c()
 
 #Loop over full p-curves
-  for (i in 0:(round(ksig/2)-1))
+  for (i in 0:floor(ksig/2))
   {
   #Drop the lowest k studies in terms of respective overall test
   #Right skew
@@ -615,7 +634,7 @@ prop33=function(pc)
   if (khalf>0)
   {
     droplow.halfr=drophigh.halfr=c()
-    for (i in 0:(round(khalf/2)-1))
+    for (i in 0:floor(khalf/2))
     {
     #Drop the lowest k studies in terms of respective overall test
       droplow.halfr= c(droplow.halfr,   dropk(pp=ppr.half,k=i,droplow=1))
@@ -706,4 +725,5 @@ prop33=function(pc)
 #so the legend is placed 60% of a chart to the left of 0 of #6, an 25% of a chart below it.
 #save it
   dev.off()
-}
+ }
+ 
