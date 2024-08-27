@@ -214,7 +214,15 @@ prop33=function(pc)
 
 #2.3.3 HALF-p-curve
   #Share of p-values expected to be p<.025 if 33% power (using Function 4 from above, prop33() )
-      prop25=3*prop33(.025)
+      #prop25=3*prop33(.025)
+      prop25=prop33(.025)
+      
+#Bug fixed on 2024 08 27, caught by Richard Morey
+#The calculations were conditioning twice on p<.05
+#This means that that p-curve app < 4.1 was giving conservative results test of 33% poiwer 
+#for half p-curve, meaning that if half-p-curve was quite flatter than 33%, and should reject 33%
+#power, it would too often not do that.
+      
       prop25.sig=prop25[p<.05]
     
 
