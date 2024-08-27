@@ -18,8 +18,8 @@
 ###################################################################################################################
   library('groundhog')
   pkgs=c('stringr','poibin')
-  #groundhog.library(pkgs, '2024-07-01')
-   groundhog.library(pkgs, '2017-11-30') #On the server
+  groundhog.library(pkgs, '2024-07-01')
+  # groundhog.library(pkgs, '2017-11-30') #On the server
     
      #GROUNDHOG NOTE:
         # Groundhog loads the version of each package as current on the specified date.
@@ -733,5 +733,6 @@ prop33=function(pc)
 #so the legend is placed 60% of a chart to the left of 0 of #6, an 25% of a chart below it.
 #save it
   dev.off()
+  return(main.results)
  }
  
