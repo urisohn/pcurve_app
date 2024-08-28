@@ -1,7 +1,8 @@
 
 ###################################################################################################################
-#This is the R Code behind the p-curve app 4.1
-#Written by Uri Simonsohn (urisohn@gmail.com)
+# This is the R Code behind the p-curve app 4.1
+# Written by Uri Simonsohn (urisohn@gmail.com)
+# Latest update: 2024 08 28
 # 
 ###################################################################################################################
 
@@ -16,36 +17,32 @@
 #below.
 
 ###################################################################################################################
-  library('groundhog')
-  pkgs=c('stringr','poibin')
-  groundhog.library(pkgs, '2024-07-01')
-  # groundhog.library(pkgs, '2017-11-30') #On the server
-    
-     #GROUNDHOG NOTE:
-        # Groundhog loads the version of each package as current on the specified date.
-        # When re-running this code, you can change the date to a more recent one.
-        # Most likely the script will run fine with the new date, and it will load 
-        # pkgs much faster if the date is recent. But, if the code does not run with 
-        # a recent date, it means a pkg update broke this code. You can 
-        # switch the date back to the one above. The older pkg versions will install
-        # faster if you run this code on the version of *R* available on that day.
-        # See details and instructions: https://groundhogr.com/many
+  #When run off server, do version control for pkgs
+  #library('groundhog')
+  #pkgs=c('stringr','poibin')
+  #groundhog.library(pkgs, '2017-11-30') #On the server
+  #The script was written in R-3.4.x but with groundhog i have verified it runs with R-4.4, 
+ 
+##########################################################################
+  
+  library('stringr')
+  library('poibin')
+ 
+     #poibin: used to compute the binomial test given that each test has a (slightly) different
+         #probability of p<.025 depending on its own noncentral parameter
+         #See Hong (2013) - "On computing the distribution function for the Poisson 
+            #binomial distribution" Computational Statistics and Data Analysis, 
+            #V59, p.41-51 - http://dx.doi.org/10.1016/j.csda.2012.10.006 
+     #stringr: for text formatting
+  
 
-    #The script was written in R-3.4.x but upon verifying it runs with R-4.4, 
-    #I kept that date in groundhog making it more efficient to run,
-    #in other words, as of 2024/08, neither of the pkgs used has changed in a way that breaks the code
-  
-  
+#---------------------------------------------------------------------------
+
 #Function that runs the app  
  pcurve_app=function(file1,dir1)
  {
   #0.1 Set up parameters
-  #used to compute the binomial test given that each test has a (slightly) different
-  #probability of p<.025 depending on its own noncentral parameter
-  
-  #See Hong (2013) - "On computing the distribution function for the Poisson 
-  #  binomial distribution" Computational Statistics and Data Analysis, V59, p.41-51 - http://dx.doi.org/10.1016/j.csda.2012.10.006 
-  
+   
   setwd(dir1)                               #Set as Working Directory the folder on server where temporary files are saved
   filek=substr(file1,1,nchar(file1)-4)      #filek is the name of the file entered by the user/server, dropping the extension
 
@@ -214,13 +211,13 @@ prop33=function(pc)
 
 #2.3.3 HALF-p-curve
   #Share of p-values expected to be p<.025 if 33% power (using Function 4 from above, prop33() )
-      #prop25=3*prop33(.025)
-      prop25=prop33(.025)
+      #prop25 = 3*prop33(.025)
+       prop25 =   prop33(.025)
       
 #Bug fixed on 2024 08 27, caught by Richard Morey
 #The calculations were conditioning twice on p<.05
-#This means that that p-curve app < 4.1 was giving conservative results test of 33% poiwer 
-#for half p-curve, meaning that if half-p-curve was quite flatter than 33%, and should reject 33%
+#This means that that p-curve app < 4.1 was giving conservative results test of half-p-curve for 33% power 
+#meaning that if half-p-curve was quite flatter than 33%, and should reject 33%
 #power, it would too often not do that.
       
       prop25.sig=prop25[p<.05]
@@ -727,7 +724,7 @@ prop33=function(pc)
   mtext(side=1,line=2.5,bquote(bold("Number of tests dropped (")*bolditalic("k")*")"),cex=1.15)
 #x-axis label
 #Legend (winging it for location)
-  op=par(usr=c(0,1,0,1),xpd=NA)   #allow goin outsie of plot 6 and recalibrate dimensions to be 0-1 in x and y
+  op=par(usr=c(0,1,0,1),xpd=NA)   #allow going outside of plot 6 and recalibrate dimensions to be 0-1 in x and y
   
   legend(-.6,-.25,horiz=TRUE,pch=c(19,1),cex=1.4, legend=expression("Including all "*italic(p)*"-values","Dropping "*italic(p)*"-values"))   
 #so the legend is placed 60% of a chart to the left of 0 of #6, an 25% of a chart below it.
