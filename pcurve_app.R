@@ -1,8 +1,8 @@
 
 ###################################################################################################################
-# This is the R Code behind the p-curve app 4.1
+# This is the R Code behind the p-curve app 4.11
 # Written by Uri Simonsohn (urisohn@gmail.com)
-# Latest update: 2024 08 28
+# Latest update: 2026 09 17
 # 
 ###################################################################################################################
 
@@ -109,7 +109,12 @@ prop33=function(pc)
 }
 
 #Function 5 Stouffer test for a vector of pp-values
-  stouffer=function(pp) sum(qnorm(pp),na.rm=TRUE)/sqrt(sum(!is.na(pp)))
+#When all pp are NA (e.g., zero p<.025 for half p-curve), return NA instead of 0/0=NaN
+  stouffer=function(pp) {
+    n=sum(!is.na(pp))
+    if (n==0) return(NA_real_)
+    sum(qnorm(pp),na.rm=TRUE)/sqrt(n)
+    }
     
   
   
